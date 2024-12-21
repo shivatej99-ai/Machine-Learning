@@ -1,0 +1,104 @@
+Financial Risk for Loan Approval
+Introduction
+Problem Statement
+In the evolving landscape of financial lending, accurately predicting borrower risk and determining loan approval status are critical for lenders and borrowers. Traditional evaluation methods can be time-consuming and may lack the objectivity needed to assess risk effectively. This project aims to develop a predictive model that simultaneously predicts the risk score of loan applicants and assesses their eligibility for loan approval. By leveraging historical data and machine learning techniques, the goal is to enhance the decision-making process, reduce default rates, and ensure fair access to credit for qualified borrowers.
+Dataset for Risk Assessment and Loan Approval Modeling
+This dataset comprises 20,000 records of personal and financial data, designed to facilitate the development of predictive models for risk assessment. It serves two primary purposes:
+1.	Risk Score Regression: To predict a continuous risk score associated with everyone’s loan default or financial instability likelihood.
+2.	Binary Classification: To determine the binary outcome of loan approval, indicating whether an applicant is likely to be approved or denied for a loan.
+
+Data Set Overview:
+The dataset includes diverse features such as demographic information, credit history, employment status, income levels, existing debt, and other relevant financial metrics, providing a comprehensive foundation for sophisticated data-driven analysis and decision-making.
+The dataset used contains 20,000 rows and 36 columns, including:
+ApplicationDate: Loan application date, Age: Applicant's age, AnnualIncome: Yearly income, CreditScore: Creditworthiness score, EmploymentStatus: Job situation, EducationLevel: Highest education attained, Experience: Work experience, LoanAmount: Requested loan size, LoanDuration: Loan repayment period, MaritalStatus: Applicant's marital state, NumberOfDependents: Number of dependents, HomeOwnershipStatus: Homeownership type, MonthlyDebtPayments: Monthly debt obligations, CreditCardUtilizationRate: Credit card usage percentage, NumberOfOpenCreditLines: Active credit lines, NumberOfCreditInquiries: Credit checks count, DebtToIncomeRatio: Debt to income proportion, BankruptcyHistory: Bankruptcy records, LoanPurpose: Reason for loan, PreviousLoanDefaults: Prior loan defaults, PaymentHistory: Past payment behavior, LengthOfCreditHistory: Credit history duration, SavingsAccountBalance: Savings account amount, CheckingAccountBalance: Checking account funds, TotalAssets: Total owned assets, TotalLiabilities: Total owed debts, MonthlyIncome: Income per month, UtilityBillsPaymentHistory: Utility payment record, JobTenure: Job duration, NetWorth: Total financial worth, BaseInterestRate: Starting interest rate, InterestRate: Applied interest rate, MonthlyLoanPayment: Monthly loan payment, TotalDebtToIncomeRatio: Total debt against income, LoanApproved: Loan approval status, RiskScore: Risk assessment score
+The dataset was loaded using pandas, and initial checks revealed:
+- No missing values across columns.
+- A mix of categorical and numerical features.
+Exploratory Data Analysis: 1) Box plots
+The dataset contains various financial and demographic features, some with balanced distributions and others heavily skewed or containing outliers. Age, CreditScore, and Loan Duration are relatively well-behaved, with minimal outliers and symmetrical distributions. NumberOfDependents is balanced but includes occasional outliers for larger families.
+Features like AnnualIncome, LoanAmount, SavingsAccountBalance, NetWorth, and TotalAssets exhibit heavy skewness and significant outliers, representing a small subset with disproportionately high values. Similarly, MonthlyLoanPayment and TotalDebtToIncomeRatio show extreme outliers that may skew modeling outcomes. These features likely require transformations (e.g., log or power) and robust scaling to handle skewness and outliers effectively.
+Key features such as CreditCardUtilizationRate, DebtToIncomeRatio, and MonthlyDebtPayments show high variability with some outliers, reflecting diverse financial behaviors. BaseInterestRate and InterestRate are compactly distributed with few outliers, suggesting minimal preprocessing needs.
+RiskScore, the target variable, has a usable distribution but includes outliers that could impact model accuracy. Features like JobTenure and UtilityBillsPaymentHistory demonstrate predictable trends but may require exploration of extreme values.
+Overall, preprocessing should focus on mitigating the influence of outliers and skewed distributions while leveraging balanced features like Age and CreditScore for predictive modeling. Robust methods and feature transformations are key to improving model performance.
+2) Histograms:  
+Distribution of Age: This is slightly right-skewed, indicating most individuals are in the 30–50 age range.
+Distribution of Annual Income: This shows a right-skewed distribution, suggesting most individuals have lower incomes, with fewer high earners.
+Distribution of Credit Score: A bell-shaped curve, indicating a relatively normal distribution, centered around 600.
+Distribution of Experience: Likely represents work experience in years, with a slight skew towards lower values, indicating more individuals have less than 20 years of experience.
+Distribution of Loan Amount: Highly right-skewed, meaning most individuals borrow smaller amounts, while larger loans are less common.
+Distribution of Loan Duration: A multimodal distribution, suggesting clusters of common loan durations, potentially tied to standard financial terms (e.g., 12, 24, 60 months).
+Distribution of Number of Dependents: Discrete values, with the majority having 0–2 dependents, but some with higher numbers.
+Distribution of Monthly Debt Payments: Right skewed, with most individuals paying lower monthly debts.
+Distribution of Credit Card Utilization Rate: Slightly right skewed, indicating many individuals use less than 50% of their credit limits.
+3) Correlation matrix:  
+Positive Correlation: Red cells with higher values (closer to +1) indicate strong positive relationships, meaning as one variable increases, so does the other. For example:
+•	Monthly and Annual Income have a near-perfect correlation of 0.99, suggesting they strongly influence each other.
+•	Net Worth and Total Assets also exhibit a strong positive relationship.
+Negative Correlation: Blue cells with lower values (closer to -1) show strong negative correlations, meaning as one variable increases, the other decreases. For instance:
+•	Age and Experience have a negative correlation (-0.98), possibly due to how the dataset defines these variables.
+•	Credit Score negatively correlates with Debt-to-Income Ratio (-0.33), suggesting individuals with higher debt-to-income ratios may have lower credit scores.
+Weak or No Correlation: Many cells have values close to 0, indicating weak or no linear relationship between the variables. For example, Loan Duration has minimal correlation with most other variables.
+Model Performance: 
+Regression Models: 
+1)	Linear Models:
+LinearRegression and Ridge perform similarly, achieving an R² of 0.779 and low RMSE (3.61), indicating moderate predictive accuracy. Both have a similar MAE (2.98) and MAPE (~6%).
+Lasso and ElasticNet perform poorly, with R² values below 0.5 and significantly higher errors, suggesting these models are less effective for this dataset.
+2)	Tree-Based Models:
+Decision Tree Regressor achieves an R² of 0.698 with an RMSE of 4.23, which is lower than ensemble models but better than basic linear models. MAE and MAPE are also relatively low, making it a reasonable choice for non-linear data.
+Random Forest Regressor performs substantially better, with an R² of 0.87 and reduced RMSE (2.77), indicating it handles complexity and variance effectively.
+3)	Boosting Models:
+Ada Boost Regressor has limited performance, with an R² of 0.63 and higher errors compared to Random Forest and Gradient Boosting.
+Gradient Boosting Regressor improves significantly, with an R² of 0.883 and low RMSE (2.62), showing its strength in capturing complex patterns.
+XGBoost outperforms all models, with two configurations achieving R² of 0.894 and 0.907, respectively. The second configuration is the best overall, with the lowest RMSE (2.34), MAE (1.48), and MAPE (3.1%).
+
+Tree-based models, particularly XGBoost, demonstrate superior performance for this dataset, handling both linear and non-linear relationships effectively. Simpler models like Linear Regression and Ridge provide moderate accuracy but are outperformed by ensemble methods.
+
+Classification Models: 
+Logistic Regression:
+•	Achieves high accuracy (0.9488) balanced Precision (0.8889) and Recall (0.8946).
+•	F1 Score (0.8917) and Cohen Kappa (0.8582) reflect strong overall performance.
+Decision Tree Classifier:
+•	Relatively lower accuracy (0.8942) and Precision (0.7787).
+•	Recall (0.7693) is moderate, resulting in a lower F1 Score (0.7739).
+•	Cohen Kappa (0.7049) indicates moderate agreement.
+Random Forest Classifier:
+•	Accuracy (0.9250) is good, but Precision (0.8724) and Recall (0.7983) show imbalance.
+•	F1 Score (0.8337) and Cohen Kappa (0.7854) highlight decent performance.
+Boosting Models:
+•	AdaBoost and Gradient Boosting:
+o	Both models show strong accuracy and balance among metrics.
+o	AdaBoost achieves slightly higher Precision (0.9068) and Cohen Kappa (0.8574).
+•	XGBoost:
+o	Delivers the best overall performance, especially in configuration 2 (row 6).
+o	Highest Accuracy (0.9565), Precision (0.9138), and Recall (0.9002), leading to an exceptional F1 Score (0.9070) and Cohen Kappa (0.8786).
+
+XGBoost is the top-performing model, excelling across all metrics. Logistic Regression and boosting methods like AdaBoost are also robust, while Decision Trees exhibit weaker results.
+
+Overall Top Performer:
+The second XGBoost Classifier (row 6) emerges as the best-performing model. It achieves the highest Accuracy (95.65%), Precision (91.38%), Recall (90.02%), and F1 Score (90.70%), indicating it can handle both false positives and false negatives effectively. Its Cohen Kappa (0.8786) suggests a very high agreement between predictions and ground truth, making it a reliable choice for this classification task.
+Boosting Models’ Superiority:
+Boosting methods like AdaBoost, Gradient Boosting, and XGBoost outperform simpler models such as Logistic Regression and Decision Trees. This reflects the ability of boosting algorithms to iteratively refine predictions by reducing errors from previous iterations, leading to more robust models for complex datasets.
+Baseline Models:
+While Logistic Regression performs well overall (94.88% Accuracy and 0.8582 Cohen Kappa), Decision Tree Classifier performs significantly worse, with the lowest Accuracy (89.42%), Precision (77.87%), and Recall (76.93%). This indicates that Decision Trees, while simple and interpretable, struggle with generalization compared to ensemble methods.
+Random Forest:
+Random Forest shows a balanced performance but is outperformed by boosting models. Its Accuracy (92.50%) and F1 Score (83.37%) suggest it handles variability in data better than single trees but not as well as boosting algorithms.
+Conclusion:
+ This project successfully established a predictive framework for assessing both the risk score and loan approval status of applicants. By employing advanced machine learning algorithms, we demonstrated the ability to accurately evaluate borrower risk while determining eligibility for loans. Key factors influencing both the risk score, and approval decisions were identified, offering valuable insights for lenders.
+The implementation of this dual-predictive model not only streamlines the loan approval process but also enhances fairness by relying on data-driven metrics. Future work can focus on refining the model with more diverse datasets, exploring real-time risk assessments, and incorporating evolving economic conditions. Overall, this project contributes to the advancement of predictive analytics in the lending sector, fostering greater efficiency and equity in loan approvals.
+
+Areas for Improvement
+1. Feature Selection: Removing less informative features could enhance model performance and reduce overfitting.
+2. Imbalanced Data: The dataset might have imbalanced classes for LoanApproved. Oversampling (SMOTE) or under sampling techniques could improve results.
+3. Hyperparameter Tuning: Although basic grid search was employed, an extensive search with cross-validation might yield better parameters.
+4. Complex Architectures: Exploring advanced models like neural networks for both classification and regression.
+
+
+
+
+
+
+
+
+
+
+
